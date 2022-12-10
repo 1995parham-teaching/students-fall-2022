@@ -1,2 +1,5 @@
-# students-fall-2022
- Example ReSTFul Server in Golang - CE261-Web 
+# Students Fall 2022
+
+## Introduction
+
+Review on how we can write a web application with Echo Framework.
