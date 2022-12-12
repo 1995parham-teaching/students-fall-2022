@@ -1,6 +1,15 @@
 package student
 
-import "github.com/1995parham-teaching/students/internal/model"
+import (
+	"errors"
+
+	"github.com/1995parham-teaching/students/internal/model"
+)
+
+var (
+	ErrStudentAlreadyExists = errors.New("student already exists")
+	ErrStudentNotFound      = errors.New("student does not exist")
+)
 
 type Student interface {
 	GetAll() ([]model.Student, error)
