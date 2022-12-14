@@ -25,7 +25,7 @@ func (s Student) Create(c echo.Context) error {
 
 	st := model.Student{
 		Name:    req.Name,
-		ID:      fmt.Sprintf("%08d", rand.Int63n(1_000_000_000)),
+		ID:      fmt.Sprintf("%08d", rand.Int63n(100_000_000)),
 		Courses: nil,
 	}
 
@@ -38,4 +38,39 @@ func (s Student) Create(c echo.Context) error {
 	}
 
 	return c.JSON(http.StatusOK, st)
+}
+
+func (s Student) GetAll(c echo.Context) error {
+	ss, err := s.Store.GetAll()
+	if err != nil {
+		return echo.ErrInternalServerError
+	}
+
+	h := c.Request().Header.Get("STUDENTS-FALL-2022")
+	fmt.Println(h)
+
+	c.Response().Header().Add("STUDENTS-FALL-2022", "123")
+
+	return c.JSON(http.StatusOK, ss)
+}
+
+func (s Student) Get(c echo.Context) error {
+	id := c.Param("id")
+
+	st, err := s.Store.Get(id)
+	if err != nil {
+		if errors.Is(err, student.ErrStudentNotFound) {
+			return echo.ErrNotFound
+		}
+
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(http.StatusOK, st)
+}
+
+func (s Student) Register(g *echo.Group) {
+	g.POST("/students", s.Create)
+	g.GET("/students", s.GetAll)
+	g.GET("/students/:id", s.Get)
 }
