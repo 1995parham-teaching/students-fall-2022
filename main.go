@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/1995parham-teaching/students/internal/handler"
+	"github.com/1995parham-teaching/students/internal/store/course"
 	"github.com/1995parham-teaching/students/internal/store/student"
 	"github.com/labstack/echo/v4"
 	"gorm.io/driver/sqlite"
@@ -19,6 +20,7 @@ func main() {
 	}
 
 	s := student.NewSQL(db)
+	course.NewSQL(db)
 
 	h := handler.Student{
 		Store: s,
