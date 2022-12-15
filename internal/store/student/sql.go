@@ -1,6 +1,7 @@
 package student
 
 import (
+	"errors"
 	"log"
 
 	"github.com/1995parham-teaching/students/internal/model"
@@ -62,5 +63,19 @@ func (sql SQL) Create(s model.Student) error {
 }
 
 func (sql SQL) Get(id string) (model.Student, error) {
-	return model.Student{}, nil
+	var st SQLItem
+
+	if err := sql.DB.Take(&st, id).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return model.Student{}, ErrStudentNotFound
+		}
+
+		return model.Student{}, err
+	}
+
+	return model.Student{
+		Name:    st.Name,
+		ID:      st.ID,
+		Courses: nil,
+	}, nil
 }
