@@ -23,6 +23,10 @@ func (s Student) Create(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
+	if err := req.Validate(); err != nil {
+		return echo.ErrBadRequest
+	}
+
 	st := model.Student{
 		Name:    req.Name,
 		ID:      fmt.Sprintf("%08d", rand.Int63n(100_000_000)),
