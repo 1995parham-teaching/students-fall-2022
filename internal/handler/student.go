@@ -9,6 +9,8 @@ import (
 	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/request"
 	"github.com/1995parham-teaching/students/internal/store/student"
+	validation "github.com/go-ozzo/ozzo-validation/v4"
+	"github.com/go-ozzo/ozzo-validation/v4/is"
 	"github.com/labstack/echo/v4"
 )
 
@@ -60,6 +62,10 @@ func (s Student) GetAll(c echo.Context) error {
 
 func (s Student) Get(c echo.Context) error {
 	id := c.Param("id")
+
+	if err := validation.Validate(id, validation.Length(8, 8), is.Digit); err != nil {
+		return echo.ErrBadRequest
+	}
 
 	st, err := s.Store.Get(id)
 	if err != nil {
