@@ -1,4 +1,4 @@
-package student
+package course
 
 import (
 	"errors"
