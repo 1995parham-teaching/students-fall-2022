@@ -14,5 +14,5 @@ var (
 type Student interface {
 	GetAll() ([]model.Student, error)
 	Create(model.Student) error
-	Get(id string) (model.Student, error)
+	Get(string) (model.Student, error)
 }
