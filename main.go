@@ -21,20 +21,7 @@ func main() {
 	}
 
 	s := student.NewSQL(db)
-	c := course.NewSQL(db)
-
-	c.Create(model.Course{
-		ID:   "1",
-		Name: "IE",
-	})
-
-	s.Create(model.Student{
-		ID:      "1",
-		Name:    "Parham Alvani",
-		Courses: nil,
-	})
-
-	s.Register("1", "1")
+	course.NewSQL(db)
 
 	h := handler.Student{
 		Store: s,
