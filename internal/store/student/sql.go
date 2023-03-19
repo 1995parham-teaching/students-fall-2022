@@ -78,12 +78,20 @@ func (sql SQL) Register(sid string, cid string) error {
 	var c course.SQLItem
 
 	if err := sql.DB.First(&c, cid).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return course.ErrCourseNotFound
+		}
+
 		return err
 	}
 
 	var s SQLItem
 
 	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").First(&s, sid).Error; err != nil {
+		if errors.Is(err, gorm.ErrRecordNotFound) {
+			return ErrStudentNotFound
+		}
+
 		return err
 	}
 
