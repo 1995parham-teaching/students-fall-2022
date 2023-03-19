@@ -3,6 +3,7 @@ package handler
 import (
 	"errors"
 	"fmt"
+	"log"
 	"math/rand"
 	"net/http"
 
@@ -53,7 +54,7 @@ func (s Student) GetAll(c echo.Context) error {
 	}
 
 	h := c.Request().Header.Get("STUDENTS-FALL-2022")
-	fmt.Println(h)
+	log.Printf("STUDENTS-FALL-2022: %s\n", h)
 
 	c.Response().Header().Add("STUDENTS-FALL-2022", "123")
 
