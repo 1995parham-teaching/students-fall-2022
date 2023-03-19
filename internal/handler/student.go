@@ -15,6 +15,8 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
+const StudentIDLen = 8
+
 type Student struct {
 	Store student.Student
 }
@@ -64,7 +66,7 @@ func (s Student) GetAll(c echo.Context) error {
 func (s Student) Get(c echo.Context) error {
 	id := c.Param("id")
 
-	if err := validation.Validate(id, validation.Length(8, 8), is.Digit); err != nil {
+	if err := validation.Validate(id, validation.Length(StudentIDLen, StudentIDLen), is.Digit); err != nil {
 		return echo.ErrBadRequest
 	}
 
