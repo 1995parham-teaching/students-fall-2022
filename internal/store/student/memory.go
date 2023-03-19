@@ -50,6 +50,10 @@ func (im *InMemory) Create(s model.Student) error {
 	return nil
 }
 
+func (im *InMemory) Register(sid string, cid string) error {
+	return nil
+}
+
 func (im *InMemory) Get(id string) (model.Student, error) {
 	s, ok := im.students[id]
 	if !ok {

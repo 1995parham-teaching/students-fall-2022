@@ -4,6 +4,7 @@ import (
 	"log"
 
 	"github.com/1995parham-teaching/students/internal/handler"
+	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/store/course"
 	"github.com/1995parham-teaching/students/internal/store/student"
 	"github.com/labstack/echo/v4"
@@ -20,7 +21,20 @@ func main() {
 	}
 
 	s := student.NewSQL(db)
-	course.NewSQL(db)
+	c := course.NewSQL(db)
+
+	c.Create(model.Course{
+		ID:   "1",
+		Name: "IE",
+	})
+
+	s.Create(model.Student{
+		ID:      "1",
+		Name:    "Parham Alvani",
+		Courses: nil,
+	})
+
+	s.Register("1", "1")
 
 	h := handler.Student{
 		Store: s,

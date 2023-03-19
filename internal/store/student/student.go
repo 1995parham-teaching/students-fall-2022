@@ -15,4 +15,5 @@ type Student interface {
 	GetAll() ([]model.Student, error)
 	Create(model.Student) error
 	Get(string) (model.Student, error)
+	Register(string, string) error
 }

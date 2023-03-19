@@ -31,13 +31,44 @@ func NewSQL(db *gorm.DB) Course {
 }
 
 func (sql SQL) GetAll() ([]model.Course, error) {
-	return nil, nil
+	var items []SQLItem
+
+	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").Find(&items).Error; err != nil {
+		return nil, err
+	}
+
+	courses := make([]model.Course, 0)
+
+	for _, item := range items {
+		courses = append(courses, model.Course{
+			ID:   item.ID,
+			Name: item.Name,
+		})
+	}
+
+	return courses, nil
 }
 
 func (sql SQL) Create(s model.Course) error {
+	if err := sql.DB.Create(&SQLItem{
+		ID:   s.ID,
+		Name: s.Name,
+	}).Error; err != nil {
+		return err
+	}
+
 	return nil
 }
 
 func (sql SQL) Get(id string) (model.Course, error) {
-	return model.Course{}, nil
+	var c SQLItem
+
+	if err := sql.DB.First(&c, id).Error; err != nil {
+		return model.Course{}, err
+	}
+
+	return model.Course{
+		ID:   c.ID,
+		Name: c.Name,
+	}, nil
 }

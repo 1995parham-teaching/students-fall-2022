@@ -64,9 +64,32 @@ func (sql SQL) GetAll() ([]model.Student, error) {
 
 func (sql SQL) Create(s model.Student) error {
 	if err := sql.DB.Create(&SQLItem{
-		ID:   s.ID,
-		Name: s.Name,
+		ID:      s.ID,
+		Name:    s.Name,
+		Courses: nil,
 	}).Error; err != nil {
+		return err
+	}
+
+	return nil
+}
+
+func (sql SQL) Register(sid string, cid string) error {
+	var c course.SQLItem
+
+	if err := sql.DB.First(&c, cid).Error; err != nil {
+		return err
+	}
+
+	var s SQLItem
+
+	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").First(&s, sid).Error; err != nil {
+		return err
+	}
+
+	s.Courses = append(s.Courses, c)
+
+	if err := sql.DB.Save(&s).Error; err != nil {
 		return err
 	}
 
