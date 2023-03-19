@@ -1,5 +1,5 @@
 <h1 align="center">Students</h1>
-<h6>Based on a Fall-2022 Internet Engineering Course Project at Amirkabir University of Tech.</h6>
+<h6 align="center">Based on a Fall-2022 Internet Engineering Course Project at Amirkabir University of Tech.</h6>
 
 ## Introduction
 
