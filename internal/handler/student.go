@@ -1,10 +1,11 @@
 package handler
 
 import (
+	"crypto/rand"
 	"errors"
 	"fmt"
 	"log"
-	"math/rand"
+	"math/big"
 	"net/http"
 
 	"github.com/1995parham-teaching/students/internal/model"
@@ -15,7 +16,10 @@ import (
 	"github.com/labstack/echo/v4"
 )
 
-const StudentIDLen = 8
+const (
+	StudentIDLen = 8
+	StudentIDMax = 100_000_000
+)
 
 type Student struct {
 	Store student.Student
@@ -32,9 +36,14 @@ func (s Student) Create(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
+	idBig, err := rand.Int(rand.Reader, big.NewInt(StudentIDMax))
+	if err != nil {
+		panic(err)
+	}
+
 	st := model.Student{
 		Name:    req.Name,
-		ID:      fmt.Sprintf("%08d", rand.Int63n(100_000_000)),
+		ID:      fmt.Sprintf("%08d", idBig.Int64()),
 		Courses: nil,
 	}
 
