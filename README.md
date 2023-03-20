@@ -16,3 +16,9 @@ and each course may be taken by multiple students.
 
 I tried to use best practices that reduce the code complexity and increase maintainability.
 Code structure is somewhat compatible with the famous [project-layout](https://github.com/golang-standards/project-layout).
+
+There are two models named `Student` and `Course`. Models are used for in-application communication
+and use request/responses for serializing models over HTTP and use store structures for serializing models
+from/to database.
+For each student, it generates the student ID randomly and then stores it.
+There is no authentication over APIs and anybody can use CRUD over students and courses.
