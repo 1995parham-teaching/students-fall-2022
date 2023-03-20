@@ -10,6 +10,7 @@ import (
 
 	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/request"
+	"github.com/1995parham-teaching/students/internal/store/course"
 	"github.com/1995parham-teaching/students/internal/store/student"
 	validation "github.com/go-ozzo/ozzo-validation/v4"
 	"github.com/go-ozzo/ozzo-validation/v4/is"
@@ -95,8 +96,36 @@ func (s Student) Get(c echo.Context) error {
 	return c.JSON(http.StatusOK, st)
 }
 
+func (s Student) Fill(c echo.Context) error {
+	sid := c.Param("sid")
+	cid := c.Param("cid")
+
+	if err := validation.Validate(sid, validation.Length(StudentIDLen, StudentIDLen), is.Digit); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err := validation.Validate(cid, validation.Length(CourseIDLen, CourseIDLen), is.Digit); err != nil {
+		return echo.ErrBadRequest
+	}
+
+	if err := s.Store.Register(sid, cid); err != nil {
+		if errors.Is(err, student.ErrStudentNotFound) {
+			return echo.ErrNotFound
+		}
+
+		if errors.Is(err, course.ErrCourseNotFound) {
+			return echo.ErrNotFound
+		}
+
+		return echo.ErrInternalServerError
+	}
+
+	return c.JSON(http.StatusOK, nil)
+}
+
 func (s Student) Register(g *echo.Group) {
 	g.POST("/students", s.Create)
 	g.GET("/students", s.GetAll)
 	g.GET("/students/:id", s.Get)
+	g.GET("/students/:sid/register/:cid", s.Fill)
 }
