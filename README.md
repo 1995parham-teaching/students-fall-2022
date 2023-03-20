@@ -85,3 +85,36 @@ curl 127.0.0.1:1373/v1/students/89846857
   "courses": [{ "Name": "Internet Engineering", "ID": "00000007" }]
 }
 ```
+
+Then we can even add new course and register our student into that course too:
+
+```bash
+curl 127.0.0.1:1373/v1/courses -X POST -H 'Content-Type: application/json' -d '{ "name": "C Programming" }'
+```
+
+```json
+{ "Name": "C Programming", "ID": "00000000" }
+```
+
+```bash
+curl 127.0.0.1:1373/v1/students/89846857/register/00000000
+```
+
+```json
+null
+```
+
+```bash
+curl 127.0.0.1:1373/v1/students/89846857
+```
+
+```json
+{
+  "name": "Parham Alvani",
+  "id": "89846857",
+  "courses": [
+    { "Name": "C Programming", "ID": "00000000" },
+    { "Name": "Internet Engineering", "ID": "00000007" }
+  ]
+}
+```
