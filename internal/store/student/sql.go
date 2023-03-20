@@ -93,11 +93,7 @@ func (sql SQL) Register(sid string, cid string) error {
 
 	s.Courses = append(s.Courses, c)
 
-	if err := sql.DB.Save(&s).Error; err != nil {
-		return err
-	}
-
-	return nil
+	return sql.DB.Save(&s).Error
 }
 
 func (sql SQL) Get(id string) (model.Student, error) {

@@ -50,7 +50,7 @@ func (im *InMemory) Create(s model.Student) error {
 	return nil
 }
 
-func (im *InMemory) Register(sid string, cid string) error {
+func (im *InMemory) Register(_ string, _ string) error {
 	return nil
 }
 
