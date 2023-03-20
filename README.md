@@ -10,4 +10,4 @@ relationship between course and student which means each student can have multip
 and each course may be taken by multiple students.
 
 I tried to use best practices that reduce the code complexity and increase maintainability.
-Code structure is somewhat compatible with the famous (project-layout)[https://github.com/golang-standards/project-layout).
+Code structure is somewhat compatible with the famous [project-layout](https://github.com/golang-standards/project-layout).
