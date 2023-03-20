@@ -29,10 +29,14 @@ func (s Student) Create(c echo.Context) error {
 	var req request.StudentCreate
 
 	if err := c.Bind(&req); err != nil {
+		log.Println(err)
+
 		return echo.ErrBadRequest
 	}
 
 	if err := req.Validate(); err != nil {
+		log.Println(err)
+
 		return echo.ErrBadRequest
 	}
 
@@ -55,7 +59,7 @@ func (s Student) Create(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	return c.JSON(http.StatusOK, st)
+	return c.JSON(http.StatusCreated, st)
 }
 
 func (s Student) GetAll(c echo.Context) error {

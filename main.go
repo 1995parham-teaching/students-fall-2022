@@ -19,14 +19,23 @@ func main() {
 		log.Fatal(err)
 	}
 
-	s := student.NewSQL(db)
-	course.NewSQL(db)
+	{
+		s := student.NewSQL(db)
+		h := handler.Student{
+			Store: s,
+		}
 
-	h := handler.Student{
-		Store: s,
+		h.Register(app.Group("/v1"))
 	}
 
-	h.Register(app.Group("/v1"))
+	{
+		s := course.NewSQL(db)
+		h := handler.Course{
+			Store: s,
+		}
+
+		h.Register(app.Group("/v1"))
+	}
 
 	if err := app.Start("127.0.0.1:1373"); err != nil {
 		log.Fatal(err)
