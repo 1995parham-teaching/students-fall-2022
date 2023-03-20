@@ -50,14 +50,10 @@ func (sql SQL) GetAll() ([]model.Course, error) {
 }
 
 func (sql SQL) Create(s model.Course) error {
-	if err := sql.DB.Create(&SQLItem{
+	return sql.DB.Create(&SQLItem{
 		ID:   s.ID,
 		Name: s.Name,
-	}).Error; err != nil {
-		return err
-	}
-
-	return nil
+	}).Error
 }
 
 func (sql SQL) Get(id string) (model.Course, error) {

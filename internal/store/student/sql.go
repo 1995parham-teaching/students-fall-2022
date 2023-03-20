@@ -63,15 +63,11 @@ func (sql SQL) GetAll() ([]model.Student, error) {
 }
 
 func (sql SQL) Create(s model.Student) error {
-	if err := sql.DB.Create(&SQLItem{
+	return sql.DB.Create(&SQLItem{
 		ID:      s.ID,
 		Name:    s.Name,
 		Courses: nil,
-	}).Error; err != nil {
-		return err
-	}
-
-	return nil
+	}).Error
 }
 
 func (sql SQL) Register(sid string, cid string) error {
