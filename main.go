@@ -4,7 +4,6 @@ import (
 	"log"
 
 	"github.com/1995parham-teaching/students/internal/handler"
-	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/store/course"
 	"github.com/1995parham-teaching/students/internal/store/student"
 	"github.com/labstack/echo/v4"
