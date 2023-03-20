@@ -61,3 +61,27 @@ curl 127.0.0.1:1373/v1/courses -X POST -H 'Content-Type: application/json' -d '{
 ```json
 { "Name": "Internet Engineering", "ID": "00000007" }
 ```
+
+Register student into a course:
+
+```bash
+curl 127.0.0.1:1373/v1/students/89846857/register/00000007
+```
+
+```json
+null
+```
+
+And then we have the course into the student course list:
+
+```bash
+curl 127.0.0.1:1373/v1/students/89846857
+```
+
+```json
+{
+  "name": "Parham Alvani",
+  "id": "89846857",
+  "courses": [{ "Name": "Internet Engineering", "ID": "00000007" }]
+}
+```
