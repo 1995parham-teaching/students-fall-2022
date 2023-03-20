@@ -3,6 +3,7 @@
 
 <p align="center">
   <img alt="GitHub Workflow Status" src="https://img.shields.io/github/actions/workflow/status/1995parham-teaching/students-fall-2022/test.yaml?logo=github&style=for-the-badge">
+  <img alt="GitHub go.mod Go version" src="https://img.shields.io/github/go-mod/go-version/1995parham-teaching/students-fall-2022?logo=go&style=for-the-badge">
 </p>
 
 ## Introduction
