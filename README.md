@@ -22,3 +22,42 @@ and use request/responses for serializing models over HTTP and use store structu
 from/to database.
 For each student, it generates the student ID randomly and then stores it.
 There is no authentication over APIs and anybody can use CRUD over students and courses.
+
+## Up and Running
+
+Build and run the students' server:
+
+```bash
+go build
+./students
+```
+
+Student creation request:
+
+```bash
+curl 127.0.0.1:1373/v1/students -X POST -H 'Content-Type: application/json' -d '{ "name": "Parham Alvani" }'
+```
+
+```json
+{ "name": "Parham Alvani", "id": "89846857", "courses": null }
+```
+
+Student list request:
+
+```bash
+curl 127.0.0.1:1373/v1/students
+```
+
+```json
+[{ "name": "Parham Alvani", "id": "89846857", "courses": [] }]
+```
+
+Course creation request:
+
+```bash
+curl 127.0.0.1:1373/v1/courses -X POST -H 'Content-Type: application/json' -d '{ "name": "Internet Engineering" }'
+```
+
+```json
+{ "Name": "Internet Engineering", "ID": "00000007" }
+```
