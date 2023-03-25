@@ -23,6 +23,13 @@ from/to database.
 For each student, it generates the student ID randomly and then stores it.
 There is no authentication over APIs and anybody can use CRUD over students and courses.
 
+## SQLite is not enough?
+
+With GORM, we can't easily (trust me, Go is not Python) switch to PostgreSQL.
+I didn't implement it here, because it causes a whole structure change.
+You need to change the connection, and then it is not good to run the migration
+on store creation.
+
 ## Up and Running
 
 Build and run the students' server:
