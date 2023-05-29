@@ -8,27 +8,25 @@
 
 ## Introduction
 
-Review on how we can write a web application with HTTP Framework named [Echo](https://echo.labstack.com/) and
-ORM named [GORM](https://gorm.io/).
-This application stores students and their courses into a SQLite database. There is a many-to-many
-relationship between course and student which means each student can have multiple courses
-and each course may be taken by multiple students.
+This review discusses how to write a web application using the [Echo](https://echo.labstack.com/) HTTP Framework and [GORM](https://gorm.io/) ORM.
+The application is designed to store information about students and their courses in a SQLite database.
+The relationship between the courses and students is many-to-many,
+meaning that students can take multiple courses, and each course can have multiple students.
 
-I tried to use best practices that reduce the code complexity and increase maintainability.
-Code structure is somewhat compatible with the famous [project-layout](https://github.com/golang-standards/project-layout).
+To ensure code simplicity and maintainability, best practices were used. The code structure is compatible with the popular
+[project-layout](https://github.com/golang-standards/project-layout).
 
-There are two models named `Student` and `Course`. Models are used for in-application communication
-and use request/responses for serializing models over HTTP and use store structures for serializing models
-from/to database.
-For each student, it generates the student ID randomly and then stores it.
-There is no authentication over APIs and anybody can use CRUD over students and courses.
+The application uses two models, `Student` and `Course`, for in-application communication.
+The models use request/responses to serialize data over HTTP and store structures to serialize data from/to the database.
+To generate a student ID, a random number is assigned to each student.
+There is no authentication over the APIs, and anyone can use CRUD over students and courses.
 
 ## SQLite is not enough?
 
-With GORM, we can't easily (trust me, Go is not Python) switch to PostgreSQL.
-I didn't implement it here, because it causes a whole structure change.
-You need to change the connection, and then it is not good to run the migration
-on store creation.
+However, using SQLite has its limitations.
+GORM cannot easily switch to PostgreSQL,
+and implementing this change would require a complete structure overhaul.
+Changing the connection is not enough, and running the migration on store creation is not recommended.
 
 ## Up and Running
 
