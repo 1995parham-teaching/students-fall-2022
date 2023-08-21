@@ -1,6 +1,6 @@
 module github.com/1995parham-teaching/students
 
-go 1.20
+go 1.21
 
 require (
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
@@ -19,8 +19,8 @@ require (
 	github.com/mattn/go-sqlite3 v1.14.17 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
-	golang.org/x/crypto v0.11.0 // indirect
-	golang.org/x/net v0.12.0 // indirect
-	golang.org/x/sys v0.10.0 // indirect
-	golang.org/x/text v0.11.0 // indirect
+	golang.org/x/crypto v0.12.0 // indirect
+	golang.org/x/net v0.14.0 // indirect
+	golang.org/x/sys v0.11.0 // indirect
+	golang.org/x/text v0.12.0 // indirect
 )
