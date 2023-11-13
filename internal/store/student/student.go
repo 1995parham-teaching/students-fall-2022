@@ -13,7 +13,7 @@ var (
 
 type Student interface {
 	GetAll() ([]model.Student, error)
-	Create(model.Student) error
-	Get(string) (model.Student, error)
-	Register(string, string) error
+	Create(studen model.Student) error
+	Get(id string) (model.Student, error)
+	Register(sid string, cid string) error
 }

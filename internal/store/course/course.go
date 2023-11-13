@@ -13,6 +13,6 @@ var (
 
 type Course interface {
 	GetAll() ([]model.Course, error)
-	Create(model.Course) error
-	Get(string) (model.Course, error)
+	Create(course model.Course) error
+	Get(id string) (model.Course, error)
 }
