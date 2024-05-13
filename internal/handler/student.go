@@ -69,10 +69,10 @@ func (s Student) GetAll(c echo.Context) error {
 		return echo.ErrInternalServerError
 	}
 
-	h := c.Request().Header.Get("STUDENTS-FALL-2022")
-	log.Printf("STUDENTS-FALL-2022: %s\n", h)
+	h := c.Request().Header.Get("Students-Fall-2022")
+	log.Printf("Students-Fall-2022: %s\n", h)
 
-	c.Response().Header().Add("STUDENTS-FALL-2022", "123")
+	c.Response().Header().Add("Students-Fall-2022", "123")
 
 	return c.JSON(http.StatusOK, ss)
 }
