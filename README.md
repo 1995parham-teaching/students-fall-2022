@@ -21,6 +21,9 @@ The models use request/responses to serialize data over HTTP and store structure
 To generate a student ID, a random number is assigned to each student.
 There is no authentication over the APIs, and anyone can use CRUD over students and courses.
 
+GraphQL can improves the structure of your APIs, in case of having lots of data using it can reduce the dupicate codes.
+Here, I am going to implement it using [99designs/gqlgen](https://github.com/99designs/gqlgen).
+
 ## SQLite is not enough?
 
 However, using SQLite has its limitations.
