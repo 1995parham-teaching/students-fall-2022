@@ -32,6 +32,7 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 	}
 
 	if err := r.Store.Create(st); err != nil {
+		return nil, err
 	}
 
 	return &model.Student{
@@ -42,8 +43,24 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 }
 
 // StudentsByName is the resolver for the studentsByName field.
-func (r *queryResolver) StudentsByName(ctx context.Context, name *string) ([]*model.Student, error) {
-	return nil, nil
+func (r *queryResolver) StudentsByName(ctx context.Context, name string) ([]*model.Student, error) {
+	students, err := r.Store.GetAll()
+	if err != nil {
+		return nil, err
+	}
+
+	response := make([]*model.Student, 0)
+
+	for _, student := range students {
+		if student.Name == name {
+			response = append(response, &model.Student{
+				Name: student.Name,
+				ID:   student.ID,
+			})
+		}
+	}
+
+	return response, nil
 }
 
 // StudentByID is the resolver for the studentByID field.

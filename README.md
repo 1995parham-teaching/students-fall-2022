@@ -21,7 +21,7 @@ The models use request/responses to serialize data over HTTP and store structure
 To generate a student ID, a random number is assigned to each student.
 There is no authentication over the APIs, and anyone can use CRUD over students and courses.
 
-GraphQL can improves the structure of your APIs, in case of having lots of data using it can reduce the dupicate codes.
+GraphQL can improve the structure of your APIs, in case of having lots of data using it can reduce the duplicate codes.
 Here, I am going to implement it using [99designs/gqlgen](https://github.com/99designs/gqlgen).
 
 ## SQLite is not enough?
@@ -31,7 +31,50 @@ GORM cannot easily switch to PostgreSQL,
 and implementing this change would require a complete structure overhaul.
 Changing the connection is not enough, and running the migration on store creation is not recommended.
 
-## Up and Running
+## Up and Running (GraphQL)
+
+You can open [GraphiQL](http://127.0.0.1:1373/v2/graphiql) in your browser and then sending
+your queries and mutations.
+
+Following mutation creates a student:
+
+```graphql
+mutation {
+  createStudent(name: "Elahe Dastan") {
+    name
+  }
+}
+```
+
+Then you retrieve them by name:
+
+```graphql
+query {
+  studentsByName(name: "Elahe Dastan") {
+    name
+    id
+  }
+}
+```
+
+```json
+{
+  "data": {
+    "studentsByName": [
+      {
+        "name": "Elahe Dastan",
+        "id": "10368677"
+      },
+      {
+        "name": "Elahe Dastan",
+        "id": "34092594"
+      }
+    ]
+  }
+}
+```
+
+## Up and Running (HTTP)
 
 Build and run the students' server:
 

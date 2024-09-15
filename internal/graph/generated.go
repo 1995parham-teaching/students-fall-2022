@@ -57,7 +57,7 @@ type ComplexityRoot struct {
 
 	Query struct {
 		StudentByID    func(childComplexity int, id string) int
-		StudentsByName func(childComplexity int, name *string) int
+		StudentsByName func(childComplexity int, name string) int
 	}
 
 	Student struct {
@@ -71,7 +71,7 @@ type MutationResolver interface {
 	CreateStudent(ctx context.Context, name string) (*model.Student, error)
 }
 type QueryResolver interface {
-	StudentsByName(ctx context.Context, name *string) ([]*model.Student, error)
+	StudentsByName(ctx context.Context, name string) ([]*model.Student, error)
 	StudentByID(ctx context.Context, id string) (*model.Student, error)
 }
 
@@ -142,7 +142,7 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 			return 0, false
 		}
 
-		return e.complexity.Query.StudentsByName(childComplexity, args["name"].(*string)), true
+		return e.complexity.Query.StudentsByName(childComplexity, args["name"].(string)), true
 
 	case "Student.courses":
 		if e.complexity.Student.Courses == nil {
@@ -285,7 +285,7 @@ type Mutation {
 }
 
 type Query {
-  studentsByName(name: String): [Student!]
+  studentsByName(name: String!): [Student!]!
   studentByID(id: String!): Student
 }
 `, BuiltIn: false},
@@ -405,22 +405,22 @@ func (ec *executionContext) field_Query_studentsByName_args(ctx context.Context,
 func (ec *executionContext) field_Query_studentsByName_argsName(
 	ctx context.Context,
 	rawArgs map[string]interface{},
-) (*string, error) {
+) (string, error) {
 	// We won't call the directive if the argument is null.
 	// Set call_argument_directives_with_null to true to call directives
 	// even if the argument is null.
 	_, ok := rawArgs["name"]
 	if !ok {
-		var zeroVal *string
+		var zeroVal string
 		return zeroVal, nil
 	}
 
 	ctx = graphql.WithPathContext(ctx, graphql.NewPathWithField("name"))
 	if tmp, ok := rawArgs["name"]; ok {
-		return ec.unmarshalOString2ᚖstring(ctx, tmp)
+		return ec.unmarshalNString2string(ctx, tmp)
 	}
 
-	var zeroVal *string
+	var zeroVal string
 	return zeroVal, nil
 }
 
@@ -661,18 +661,21 @@ func (ec *executionContext) _Query_studentsByName(ctx context.Context, field gra
 	}()
 	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
 		ctx = rctx // use context from middleware stack in children
-		return ec.resolvers.Query().StudentsByName(rctx, fc.Args["name"].(*string))
+		return ec.resolvers.Query().StudentsByName(rctx, fc.Args["name"].(string))
 	})
 	if err != nil {
 		ec.Error(ctx, err)
 		return graphql.Null
 	}
 	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
 		return graphql.Null
 	}
 	res := resTmp.([]*model.Student)
 	fc.Result = res
-	return ec.marshalOStudent2ᚕᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudentᚄ(ctx, field.Selections, res)
+	return ec.marshalNStudent2ᚕᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudentᚄ(ctx, field.Selections, res)
 }
 
 func (ec *executionContext) fieldContext_Query_studentsByName(ctx context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
@@ -2972,6 +2975,9 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
 				return ec._Query_studentsByName(ctx, field)
 			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "studentByID":
 			field := field
 
@@ -4189,6 +4195,50 @@ func (ec *executionContext) marshalNStudent2githubᚗcomᚋ1995parhamᚑteaching
 	return ec._Student(ctx, sel, &v)
 }
 
+func (ec *executionContext) marshalNStudent2ᚕᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Student) graphql.Marshaler {
+	ret := make(graphql.Array, len(v))
+	var wg sync.WaitGroup
+	isLen1 := true
+	if !isLen1 {
+		wg.Add(len(v))
+	}
+	for i := range v {
+		i := i
+		fc := &graphql.FieldContext{
+			Index:  &i,
+			Result: &v[i],
+		}
+		ctx := graphql.WithFieldContext(ctx, fc)
+		f := func(i int) {
+			defer func() {
+				if r := recover(); r != nil {
+					ec.Error(ctx, ec.Recover(ctx, r))
+					ret = nil
+				}
+			}()
+			if !isLen1 {
+				defer wg.Done()
+			}
+			ret[i] = ec.marshalNStudent2ᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudent(ctx, sel, v[i])
+		}
+		if isLen1 {
+			f(i)
+		} else {
+			go f(i)
+		}
+
+	}
+	wg.Wait()
+
+	for _, e := range ret {
+		if e == graphql.Null {
+			return graphql.Null
+		}
+	}
+
+	return ret
+}
+
 func (ec *executionContext) marshalNStudent2ᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudent(ctx context.Context, sel ast.SelectionSet, v *model.Student) graphql.Marshaler {
 	if v == nil {
 		if !graphql.HasFieldError(ctx, graphql.GetFieldContext(ctx)) {
@@ -4539,53 +4589,6 @@ func (ec *executionContext) marshalOString2ᚖstring(ctx context.Context, sel as
 	}
 	res := graphql.MarshalString(*v)
 	return res
-}
-
-func (ec *executionContext) marshalOStudent2ᚕᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Student) graphql.Marshaler {
-	if v == nil {
-		return graphql.Null
-	}
-	ret := make(graphql.Array, len(v))
-	var wg sync.WaitGroup
-	isLen1 := true
-	if !isLen1 {
-		wg.Add(len(v))
-	}
-	for i := range v {
-		i := i
-		fc := &graphql.FieldContext{
-			Index:  &i,
-			Result: &v[i],
-		}
-		ctx := graphql.WithFieldContext(ctx, fc)
-		f := func(i int) {
-			defer func() {
-				if r := recover(); r != nil {
-					ec.Error(ctx, ec.Recover(ctx, r))
-					ret = nil
-				}
-			}()
-			if !isLen1 {
-				defer wg.Done()
-			}
-			ret[i] = ec.marshalNStudent2ᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudent(ctx, sel, v[i])
-		}
-		if isLen1 {
-			f(i)
-		} else {
-			go f(i)
-		}
-
-	}
-	wg.Wait()
-
-	for _, e := range ret {
-		if e == graphql.Null {
-			return graphql.Null
-		}
-	}
-
-	return ret
 }
 
 func (ec *executionContext) marshalOStudent2ᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋgraphᚋmodelᚐStudent(ctx context.Context, sel ast.SelectionSet, v *model.Student) graphql.Marshaler {

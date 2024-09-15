@@ -14,6 +14,6 @@ type Mutation {
 }
 
 type Query {
-  studentsByName(name: String): [Student!]
+  studentsByName(name: String!): [Student!]!
   studentByID(id: String!): Student
 }
