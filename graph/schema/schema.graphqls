@@ -1,11 +1,11 @@
 type Student {
-  id: ID!
+  id: String!
   name: String!
   courses: [Course!]
 }
 
 type Course {
-  id: ID!
+  id: String!
   name: String!
 }
 

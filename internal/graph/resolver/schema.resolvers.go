@@ -6,7 +6,6 @@ package resolver
 
 import (
 	"context"
-	"fmt"
 
 	"github.com/1995parham-teaching/students/internal/graph"
 	"github.com/1995parham-teaching/students/internal/graph/model"
@@ -14,12 +13,29 @@ import (
 
 // StudentsByName is the resolver for the studentsByName field.
 func (r *queryResolver) StudentsByName(ctx context.Context, name *string) ([]*model.Student, error) {
-	panic(fmt.Errorf("not implemented: StudentsByName - studentsByName"))
+	return nil, nil
 }
 
 // StudentByID is the resolver for the studentByID field.
 func (r *queryResolver) StudentByID(ctx context.Context, id string) (*model.Student, error) {
-	panic(fmt.Errorf("not implemented: StudentByID - studentByID"))
+	s, err := r.Store.Get(id)
+	if err != nil {
+		return nil, err
+	}
+
+	courses := make([]*model.Course, 0)
+	for _, c := range s.Courses {
+		courses = append(courses, &model.Course{
+			ID:   c.ID,
+			Name: c.Name,
+		})
+	}
+
+	return &model.Student{
+		ID:      s.ID,
+		Name:    s.Name,
+		Courses: courses,
+	}, nil
 }
 
 // Query returns graph.QueryResolver implementation.
