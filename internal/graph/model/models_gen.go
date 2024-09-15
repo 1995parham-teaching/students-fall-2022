@@ -7,6 +7,9 @@ type Course struct {
 	Name string `json:"name"`
 }
 
+type Mutation struct {
+}
+
 type Query struct {
 }
 

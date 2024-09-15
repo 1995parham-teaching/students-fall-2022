@@ -9,6 +9,10 @@ type Course {
   name: String!
 }
 
+type Mutation {
+  createStudent(name: String!): Student!
+}
+
 type Query {
   studentsByName(name: String): [Student!]
   studentByID(id: String!): Student
