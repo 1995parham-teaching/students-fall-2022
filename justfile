@@ -20,3 +20,7 @@ database:
 # run golangci-lint
 lint:
     golangci-lint run -c .golangci.yml
+
+# generate graphql server from schema
+gqlgen:
+    go run github.com/99designs/gqlgen generate
