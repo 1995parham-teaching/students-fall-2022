@@ -42,6 +42,11 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 	}, nil
 }
 
+// University is the resolver for the university field.
+func (r *queryResolver) University(ctx context.Context) (string, error) {
+	return "Amirkabir University of Technology", nil
+}
+
 // StudentsByName is the resolver for the studentsByName field.
 func (r *queryResolver) StudentsByName(ctx context.Context, name string) ([]*model.Student, error) {
 	students, err := r.Store.GetAll()
@@ -91,5 +96,7 @@ func (r *Resolver) Mutation() graph.MutationResolver { return &mutationResolver{
 // Query returns graph.QueryResolver implementation.
 func (r *Resolver) Query() graph.QueryResolver { return &queryResolver{r} }
 
-type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }
+type (
+	mutationResolver struct{ *Resolver }
+	queryResolver    struct{ *Resolver }
+)

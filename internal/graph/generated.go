@@ -58,6 +58,7 @@ type ComplexityRoot struct {
 	Query struct {
 		StudentByID    func(childComplexity int, id string) int
 		StudentsByName func(childComplexity int, name string) int
+		University     func(childComplexity int) int
 	}
 
 	Student struct {
@@ -71,6 +72,7 @@ type MutationResolver interface {
 	CreateStudent(ctx context.Context, name string) (*model.Student, error)
 }
 type QueryResolver interface {
+	University(ctx context.Context) (string, error)
 	StudentsByName(ctx context.Context, name string) ([]*model.Student, error)
 	StudentByID(ctx context.Context, id string) (*model.Student, error)
 }
@@ -143,6 +145,13 @@ func (e *executableSchema) Complexity(typeName, field string, childComplexity in
 		}
 
 		return e.complexity.Query.StudentsByName(childComplexity, args["name"].(string)), true
+
+	case "Query.university":
+		if e.complexity.Query.University == nil {
+			break
+		}
+
+		return e.complexity.Query.University(childComplexity), true
 
 	case "Student.courses":
 		if e.complexity.Student.Courses == nil {
@@ -285,6 +294,7 @@ type Mutation {
 }
 
 type Query {
+  university: String!
   studentsByName(name: String!): [Student!]!
   studentByID(id: String!): Student
 }
@@ -643,6 +653,50 @@ func (ec *executionContext) fieldContext_Mutation_createStudent(ctx context.Cont
 	if fc.Args, err = ec.field_Mutation_createStudent_args(ctx, field.ArgumentMap(ec.Variables)); err != nil {
 		ec.Error(ctx, err)
 		return fc, err
+	}
+	return fc, nil
+}
+
+func (ec *executionContext) _Query_university(ctx context.Context, field graphql.CollectedField) (ret graphql.Marshaler) {
+	fc, err := ec.fieldContext_Query_university(ctx, field)
+	if err != nil {
+		return graphql.Null
+	}
+	ctx = graphql.WithFieldContext(ctx, fc)
+	defer func() {
+		if r := recover(); r != nil {
+			ec.Error(ctx, ec.Recover(ctx, r))
+			ret = graphql.Null
+		}
+	}()
+	resTmp, err := ec.ResolverMiddleware(ctx, func(rctx context.Context) (interface{}, error) {
+		ctx = rctx // use context from middleware stack in children
+		return ec.resolvers.Query().University(rctx)
+	})
+	if err != nil {
+		ec.Error(ctx, err)
+		return graphql.Null
+	}
+	if resTmp == nil {
+		if !graphql.HasFieldError(ctx, fc) {
+			ec.Errorf(ctx, "must not be null")
+		}
+		return graphql.Null
+	}
+	res := resTmp.(string)
+	fc.Result = res
+	return ec.marshalNString2string(ctx, field.Selections, res)
+}
+
+func (ec *executionContext) fieldContext_Query_university(_ context.Context, field graphql.CollectedField) (fc *graphql.FieldContext, err error) {
+	fc = &graphql.FieldContext{
+		Object:     "Query",
+		Field:      field,
+		IsMethod:   true,
+		IsResolver: true,
+		Child: func(ctx context.Context, field graphql.CollectedField) (*graphql.FieldContext, error) {
+			return nil, errors.New("field of type String does not have child fields")
+		},
 	}
 	return fc, nil
 }
@@ -2969,6 +3023,15 @@ func (ec *executionContext) _Query(ctx context.Context, sel ast.SelectionSet) gr
 		switch field.Name {
 		case "__typename":
 			out.Values[i] = graphql.MarshalString("Query")
+		case "university":
+			field := field
+
+			out.Values[i] = ec.OperationContext.RootResolverMiddleware(innerCtx, func(ctx context.Context) (res graphql.Marshaler) {
+				return ec._Query_university(ctx, field)
+			})
+			if out.Values[i] == graphql.Null {
+				out.Invalids++
+			}
 		case "studentsByName":
 			field := field
 
