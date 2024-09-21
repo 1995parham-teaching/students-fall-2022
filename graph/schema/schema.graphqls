@@ -2,6 +2,8 @@ type Student {
   id: String!
   name: String!
   courses: [Course!]
+
+  enterance: Int
 }
 
 type Course {

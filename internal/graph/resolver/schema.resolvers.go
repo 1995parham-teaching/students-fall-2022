@@ -10,8 +10,7 @@ import (
 	rand "math/rand/v2"
 
 	"github.com/1995parham-teaching/students/internal/graph"
-	"github.com/1995parham-teaching/students/internal/graph/model"
-	imodel "github.com/1995parham-teaching/students/internal/model"
+	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/request"
 )
 
@@ -25,7 +24,7 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 		return nil, err
 	}
 
-	st := imodel.Student{
+	st := model.Student{
 		Name:    req.Name,
 		ID:      fmt.Sprintf("%08d", rand.Int64()%StudentIDMax),
 		Courses: nil,
@@ -35,11 +34,7 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 		return nil, err
 	}
 
-	return &model.Student{
-		ID:      st.ID,
-		Name:    st.Name,
-		Courses: nil,
-	}, nil
+	return &st, nil
 }
 
 // University is the resolver for the university field.
@@ -75,9 +70,9 @@ func (r *queryResolver) StudentByID(ctx context.Context, id string) (*model.Stud
 		return nil, err
 	}
 
-	courses := make([]*model.Course, 0)
+	courses := make([]model.Course, 0)
 	for _, c := range s.Courses {
-		courses = append(courses, &model.Course{
+		courses = append(courses, model.Course{
 			ID:   c.ID,
 			Name: c.Name,
 		})
@@ -90,13 +85,23 @@ func (r *queryResolver) StudentByID(ctx context.Context, id string) (*model.Stud
 	}, nil
 }
 
+// Enterance is the resolver for the enterance field.
+func (r *studentResolver) Enterance(ctx context.Context, obj *model.Student) (*int, error) {
+	enterance := 1401
+	return &enterance, nil
+}
+
 // Mutation returns graph.MutationResolver implementation.
 func (r *Resolver) Mutation() graph.MutationResolver { return &mutationResolver{r} }
 
 // Query returns graph.QueryResolver implementation.
 func (r *Resolver) Query() graph.QueryResolver { return &queryResolver{r} }
 
+// Student returns graph.StudentResolver implementation.
+func (r *Resolver) Student() graph.StudentResolver { return &studentResolver{r} }
+
 type (
 	mutationResolver struct{ *Resolver }
 	queryResolver    struct{ *Resolver }
+	studentResolver  struct{ *Resolver }
 )
