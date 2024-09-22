@@ -37,7 +37,9 @@ func (sql SQL) GetAll() ([]model.Student, error) {
 	var items []SQLItem
 
 	if err := sql.DB.Model(new(SQLItem)).
-		Preload("Courses").
+		Select("Name", "ID", "Courses.ID", "Courses.Name").
+		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
+		Joins("LEFT JOIN `courses` ON `courses`.`id` = `students_courses`.`course_id`").
 		Find(&items).Error; err != nil {
 		return nil, err
 	}
@@ -99,11 +101,17 @@ func (sql SQL) Register(sid string, cid string) error {
 }
 
 func (sql SQL) Get(id string) (model.Student, error) {
-	var st SQLItem
+	var st []struct {
+		ID          string
+		Name        string
+		CoursesID   string
+		CoursesName string
+	}
 
-	if err := sql.DB.Model(new(SQLItem)).
-		Preload("Courses").
-		Take(&st, id).Error; err != nil {
+	if err := sql.DB.Table("students").
+		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
+		Joins("LEFT JOIN (select id courses_id, name courses_name from `courses`) ON `courses_id` = `students_courses`.`course_id`").
+		Where("students.id = ?", id).Scan(&st).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
 		}
@@ -111,17 +119,19 @@ func (sql SQL) Get(id string) (model.Student, error) {
 		return model.Student{}, err
 	}
 
-	courses := make([]model.Course, 0, len(st.Courses))
-	for _, course := range st.Courses {
+	log.Println(st)
+
+	courses := make([]model.Course, 0, len(st))
+	for _, course := range st {
 		courses = append(courses, model.Course{
-			Name: course.Name,
-			ID:   course.ID,
+			Name: course.CoursesName,
+			ID:   course.CoursesID,
 		})
 	}
 
 	return model.Student{
-		Name:    st.Name,
-		ID:      st.ID,
+		Name:    st[0].Name,
+		ID:      st[0].ID,
 		Courses: courses,
 	}, nil
 }
