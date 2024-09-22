@@ -23,6 +23,9 @@ func main() {
 		log.Fatal(err)
 	}
 
+	// start debug mode.
+	db = db.Debug()
+
 	ss := student.NewSQL(db)
 
 	{
