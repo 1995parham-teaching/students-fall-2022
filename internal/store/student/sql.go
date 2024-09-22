@@ -36,7 +36,7 @@ func NewSQL(db *gorm.DB) Student {
 func (sql SQL) GetAll() ([]model.Student, error) {
 	var items []SQLItem
 
-	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").Find(&items).Error; err != nil {
+	if err := sql.DB.Model(new(SQLItem)).Joins("Courses").Find(&items).Error; err != nil {
 		return nil, err
 	}
 
@@ -83,7 +83,7 @@ func (sql SQL) Register(sid string, cid string) error {
 
 	var s SQLItem
 
-	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").First(&s, sid).Error; err != nil {
+	if err := sql.DB.Model(new(SQLItem)).First(&s, sid).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return ErrStudentNotFound
 		}
@@ -99,7 +99,10 @@ func (sql SQL) Register(sid string, cid string) error {
 func (sql SQL) Get(id string) (model.Student, error) {
 	var st SQLItem
 
-	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").Take(&st, id).Error; err != nil {
+	if err := sql.DB.Model(new(SQLItem)).
+		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
+		Joins("LEFT JOIN `courses` ON `courses`.`id` = `students_courses`.`course_id`").
+		Take(&st, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
 		}
