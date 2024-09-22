@@ -36,7 +36,10 @@ func NewSQL(db *gorm.DB) Student {
 func (sql SQL) GetAll() ([]model.Student, error) {
 	var items []SQLItem
 
-	if err := sql.DB.Model(new(SQLItem)).Joins("Courses").Find(&items).Error; err != nil {
+	if err := sql.DB.Model(new(SQLItem)).
+		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
+		Joins("LEFT JOIN `courses` ON `courses`.`id` = `students_courses`.`course_id`").
+		Find(&items).Error; err != nil {
 		return nil, err
 	}
 
