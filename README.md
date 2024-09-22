@@ -169,3 +169,16 @@ curl 127.0.0.1:1373/v1/students/89846857
   ]
 }
 ```
+
+## Preload
+
+When you have a relation in your database, you can use `gorm.Preload` to fetch the related information within your
+query, under the hood GORM run `N+1` queries as follows:
+
+```text
+2024/09/22 04:09:21 /Users/parham/Documents/Git/parham/1995parham-teaching/students-fall-2022/internal/store/student/sql.go:102
+[0.081ms] [rows:0] SELECT * FROM `students_courses` WHERE `students_courses`.`sql_item_id` = "27849651"
+
+2024/09/22 04:09:21 /Users/parham/Documents/Git/parham/1995parham-teaching/students-fall-2022/internal/store/student/sql.go:102
+[0.691ms] [rows:1] SELECT * FROM `students` WHERE `students`.`id` = "27849651" LIMIT 1
+```
