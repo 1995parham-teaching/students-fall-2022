@@ -104,7 +104,7 @@ func (sql SQL) Get(id string) (model.Student, error) {
 
 	if err := sql.DB.Model(new(SQLItem)).
 		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
-		Joins("LEFT JOIN `courses` ON `courses`.`id` = `students_courses`.`course_id`").
+		Joins("LEFT JOIN (select `id` `Courses_id`, `name` `Courses_name` from `courses`) ON `Courses_id` = `students_courses`.`course_id`").
 		Take(&st, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
@@ -112,6 +112,8 @@ func (sql SQL) Get(id string) (model.Student, error) {
 
 		return model.Student{}, err
 	}
+
+	log.Println(st)
 
 	courses := make([]model.Course, 0, len(st.Courses))
 	for _, course := range st.Courses {
