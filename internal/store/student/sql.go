@@ -101,6 +101,10 @@ func (sql SQL) Register(sid string, cid string) error {
 }
 
 func (sql SQL) Get(id string) (model.Student, error) {
+	// st contains single students repeated multiple times
+	// to contains the course information using join.
+	// Here joining will remove the n+1 issue which happens
+	// with Preload().
 	var st []struct {
 		ID          string
 		Name        string
@@ -110,7 +114,8 @@ func (sql SQL) Get(id string) (model.Student, error) {
 
 	if err := sql.DB.Table("students").
 		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
-		Joins("LEFT JOIN (select id courses_id, name courses_name from `courses`) ON `courses_id` = `students_courses`.`course_id`").
+		Joins("LEFT JOIN (select id courses_id, name courses_name from `courses`) ON "+
+			"`courses_id` = `students_courses`.`course_id`").
 		Where("students.id = ?", id).Scan(&st).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
@@ -118,8 +123,6 @@ func (sql SQL) Get(id string) (model.Student, error) {
 
 		return model.Student{}, err
 	}
-
-	log.Println(st)
 
 	courses := make([]model.Course, 0, len(st))
 	for _, course := range st {
