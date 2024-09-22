@@ -37,8 +37,7 @@ func (sql SQL) GetAll() ([]model.Student, error) {
 	var items []SQLItem
 
 	if err := sql.DB.Model(new(SQLItem)).
-		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
-		Joins("LEFT JOIN `courses` ON `courses`.`id` = `students_courses`.`course_id`").
+		Preload("Courses").
 		Find(&items).Error; err != nil {
 		return nil, err
 	}
@@ -103,8 +102,7 @@ func (sql SQL) Get(id string) (model.Student, error) {
 	var st SQLItem
 
 	if err := sql.DB.Model(new(SQLItem)).
-		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
-		Joins("LEFT JOIN (select `id` `Courses__id`, `name` `Courses__name` from `courses`) ON `Courses__id` = `students_courses`.`course_id`").
+		Preload("Courses").
 		Take(&st, id).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
@@ -112,8 +110,6 @@ func (sql SQL) Get(id string) (model.Student, error) {
 
 		return model.Student{}, err
 	}
-
-	log.Println(st)
 
 	courses := make([]model.Course, 0, len(st.Courses))
 	for _, course := range st.Courses {
