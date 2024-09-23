@@ -33,7 +33,7 @@ func NewSQL(db *gorm.DB) Course {
 func (sql SQL) GetAll() ([]model.Course, error) {
 	var items []SQLItem
 
-	if err := sql.DB.Model(new(SQLItem)).Preload("Courses").Find(&items).Error; err != nil {
+	if err := sql.DB.Model(new(SQLItem)).Find(&items).Error; err != nil {
 		return nil, err
 	}
 

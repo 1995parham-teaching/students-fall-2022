@@ -37,9 +37,7 @@ func (sql SQL) GetAll() ([]model.Student, error) {
 	var items []SQLItem
 
 	if err := sql.DB.Model(new(SQLItem)).
-		Select("Name", "ID", "Courses.ID", "Courses.Name").
-		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
-		Joins("LEFT JOIN `courses` ON `courses`.`id` = `students_courses`.`course_id`").
+		Preload("Courses").
 		Find(&items).Error; err != nil {
 		return nil, err
 	}
@@ -108,8 +106,8 @@ func (sql SQL) Get(id string) (model.Student, error) {
 	var st []struct {
 		ID          string
 		Name        string
-		CoursesID   string
-		CoursesName string
+		CoursesID   *string
+		CoursesName *string
 	}
 
 	if err := sql.DB.Table("students").
@@ -125,11 +123,14 @@ func (sql SQL) Get(id string) (model.Student, error) {
 	}
 
 	courses := make([]model.Course, 0, len(st))
+
 	for _, course := range st {
-		courses = append(courses, model.Course{
-			Name: course.CoursesName,
-			ID:   course.CoursesID,
-		})
+		if course.CoursesID != nil {
+			courses = append(courses, model.Course{
+				Name: *course.CoursesName,
+				ID:   *course.CoursesID,
+			})
+		}
 	}
 
 	return model.Student{
