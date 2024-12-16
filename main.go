@@ -50,7 +50,7 @@ func main() {
 	}
 
 	{
-		srv := gHandler.NewDefaultServer(graph.NewExecutableSchema(resolver.New(ss)))
+		srv := gHandler.New(graph.NewExecutableSchema(resolver.New(ss)))
 		srv.AroundResponses(func(ctx context.Context, next graphql.ResponseHandler) *graphql.Response {
 			response := next(ctx)
 
