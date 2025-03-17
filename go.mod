@@ -1,8 +1,6 @@
 module github.com/1995parham-teaching/students
 
-go 1.23.0
-
-toolchain go1.24.1
+go 1.24
 
 require (
 	github.com/99designs/gqlgen v0.17.68
@@ -41,4 +39,9 @@ require (
 	golang.org/x/text v0.23.0 // indirect
 	golang.org/x/tools v0.31.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
+)
+
+tool (
+	github.com/99designs/gqlgen
+	github.com/99designs/gqlgen/graphql/introspection
 )
