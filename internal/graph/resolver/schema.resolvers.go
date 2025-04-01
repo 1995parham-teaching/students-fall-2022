@@ -26,7 +26,7 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 
 	st := model.Student{
 		Name:    req.Name,
-		ID:      fmt.Sprintf("%08d", rand.Int64()%StudentIDMax),
+		ID:      fmt.Sprintf("%08d", rand.Int64()%StudentIDMax), // nolint: gosec
 		Courses: nil,
 	}
 
@@ -54,8 +54,9 @@ func (r *queryResolver) StudentsByName(ctx context.Context, name string) ([]*mod
 	for _, student := range students {
 		if student.Name == name {
 			response = append(response, &model.Student{
-				Name: student.Name,
-				ID:   student.ID,
+				Courses: nil,
+				Name:    student.Name,
+				ID:      student.ID,
 			})
 		}
 	}
@@ -88,6 +89,7 @@ func (r *queryResolver) StudentByID(ctx context.Context, id string) (*model.Stud
 // Enterance is the resolver for the enterance field.
 func (r *studentResolver) Enterance(ctx context.Context, obj *model.Student) (*int, error) {
 	enterance := 1401
+
 	return &enterance, nil
 }
 
