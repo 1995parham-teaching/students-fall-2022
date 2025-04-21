@@ -6,7 +6,7 @@ require (
 	github.com/99designs/gqlgen v0.17.70
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/labstack/echo/v4 v4.13.3
-	github.com/vektah/gqlparser/v2 v2.5.24
+	github.com/vektah/gqlparser/v2 v2.5.25
 	gorm.io/driver/sqlite v1.5.7
 	gorm.io/gorm v1.25.12
 )
