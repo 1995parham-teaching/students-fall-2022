@@ -26,6 +26,8 @@ type Course struct {
 }
 
 func (s Course) Create(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	var req request.CourseCreate
 
 	if err := c.Bind(&req); err != nil {
@@ -50,7 +52,7 @@ func (s Course) Create(c echo.Context) error {
 		ID:   fmt.Sprintf("%08d", idBig.Int64()),
 	}
 
-	if err := s.Store.Create(cr); err != nil {
+	if err := s.Store.Create(ctx, cr); err != nil {
 		if errors.Is(err, course.ErrCourseAlreadyExists) {
 			return echo.ErrBadRequest
 		}
@@ -62,7 +64,9 @@ func (s Course) Create(c echo.Context) error {
 }
 
 func (s Course) GetAll(c echo.Context) error {
-	ss, err := s.Store.GetAll()
+	ctx := c.Request().Context()
+
+	ss, err := s.Store.GetAll(ctx)
 	if err != nil {
 		return echo.ErrInternalServerError
 	}
@@ -71,13 +75,15 @@ func (s Course) GetAll(c echo.Context) error {
 }
 
 func (s Course) Get(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	id := c.Param("id")
 
 	if err := validation.Validate(id, validation.Length(CourseIDLen, CourseIDLen), is.Digit); err != nil {
 		return echo.ErrBadRequest
 	}
 
-	st, err := s.Store.Get(id)
+	st, err := s.Store.Get(ctx, id)
 	if err != nil {
 		if errors.Is(err, course.ErrCourseNotFound) {
 			return echo.ErrNotFound

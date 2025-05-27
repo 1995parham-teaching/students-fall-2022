@@ -27,6 +27,8 @@ type Student struct {
 }
 
 func (s Student) Create(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	var req request.StudentCreate
 
 	if err := c.Bind(&req); err != nil {
@@ -52,7 +54,7 @@ func (s Student) Create(c echo.Context) error {
 		Courses: nil,
 	}
 
-	if err := s.Store.Create(st); err != nil {
+	if err := s.Store.Create(ctx, st); err != nil {
 		if errors.Is(err, student.ErrStudentAlreadyExists) {
 			return echo.ErrBadRequest
 		}
@@ -64,7 +66,9 @@ func (s Student) Create(c echo.Context) error {
 }
 
 func (s Student) GetAll(c echo.Context) error {
-	ss, err := s.Store.GetAll()
+	ctx := c.Request().Context()
+
+	ss, err := s.Store.GetAll(ctx)
 	if err != nil {
 		return echo.ErrInternalServerError
 	}
@@ -78,13 +82,15 @@ func (s Student) GetAll(c echo.Context) error {
 }
 
 func (s Student) Get(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	id := c.Param("id")
 
 	if err := validation.Validate(id, validation.Length(StudentIDLen, StudentIDLen), is.Digit); err != nil {
 		return echo.ErrBadRequest
 	}
 
-	st, err := s.Store.Get(id)
+	st, err := s.Store.Get(ctx, id)
 	if err != nil {
 		if errors.Is(err, student.ErrStudentNotFound) {
 			return echo.ErrNotFound
@@ -97,6 +103,8 @@ func (s Student) Get(c echo.Context) error {
 }
 
 func (s Student) Fill(c echo.Context) error {
+	ctx := c.Request().Context()
+
 	sid := c.Param("sid")
 	cid := c.Param("cid")
 
@@ -108,7 +116,7 @@ func (s Student) Fill(c echo.Context) error {
 		return echo.ErrBadRequest
 	}
 
-	if err := s.Store.Register(sid, cid); err != nil {
+	if err := s.Store.Register(ctx, sid, cid); err != nil {
 		if errors.Is(err, student.ErrStudentNotFound) {
 			return echo.ErrNotFound
 		}

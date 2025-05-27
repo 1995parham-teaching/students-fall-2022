@@ -1,6 +1,10 @@
 package student
 
-import "github.com/1995parham-teaching/students/internal/model"
+import (
+	"context"
+
+	"github.com/1995parham-teaching/students/internal/model"
+)
 
 type inMemoryItem struct {
 	Name    string
@@ -17,7 +21,7 @@ func NewInMemory() Student {
 	}
 }
 
-func (im *InMemory) GetAll() ([]model.Student, error) {
+func (im *InMemory) GetAll(_ context.Context) ([]model.Student, error) {
 	students := make([]model.Student, 0, len(im.students))
 
 	for id, i := range im.students {
@@ -31,7 +35,7 @@ func (im *InMemory) GetAll() ([]model.Student, error) {
 	return students, nil
 }
 
-func (im *InMemory) Create(s model.Student) error {
+func (im *InMemory) Create(_ context.Context, s model.Student) error {
 	if _, ok := im.students[s.ID]; ok {
 		return ErrStudentAlreadyExists
 	}
@@ -50,11 +54,11 @@ func (im *InMemory) Create(s model.Student) error {
 	return nil
 }
 
-func (im *InMemory) Register(_ string, _ string) error {
+func (im *InMemory) Register(_ context.Context, _ string, _ string) error {
 	return nil
 }
 
-func (im *InMemory) Get(id string) (model.Student, error) {
+func (im *InMemory) Get(_ context.Context, id string) (model.Student, error) {
 	s, ok := im.students[id]
 	if !ok {
 		return model.Student{}, ErrStudentNotFound

@@ -1,6 +1,7 @@
 package course
 
 import (
+	"context"
 	"errors"
 
 	"github.com/1995parham-teaching/students/internal/model"
@@ -12,7 +13,7 @@ var (
 )
 
 type Course interface {
-	GetAll() ([]model.Course, error)
-	Create(course model.Course) error
-	Get(id string) (model.Course, error)
+	GetAll(ctx context.Context) ([]model.Course, error)
+	Create(ctx context.Context, course model.Course) error
+	Get(ctx context.Context, id string) (model.Course, error)
 }

@@ -1,6 +1,7 @@
 package student
 
 import (
+	"context"
 	"errors"
 
 	"github.com/1995parham-teaching/students/internal/model"
@@ -12,8 +13,8 @@ var (
 )
 
 type Student interface {
-	GetAll() ([]model.Student, error)
-	Create(student model.Student) error
-	Get(id string) (model.Student, error)
-	Register(sid string, cid string) error
+	GetAll(ctx context.Context) ([]model.Student, error)
+	Create(ctx context.Context, student model.Student) error
+	Get(ctx context.Context, id string) (model.Student, error)
+	Register(ctx context.Context, sid string, cid string) error
 }

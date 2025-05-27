@@ -30,7 +30,7 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 		Courses: nil,
 	}
 
-	if err := r.Store.Create(st); err != nil {
+	if err := r.Store.Create(ctx, st); err != nil {
 		return nil, err
 	}
 
@@ -44,7 +44,7 @@ func (r *queryResolver) University(ctx context.Context) (string, error) {
 
 // StudentsByName is the resolver for the studentsByName field.
 func (r *queryResolver) StudentsByName(ctx context.Context, name string) ([]*model.Student, error) {
-	students, err := r.Store.GetAll()
+	students, err := r.Store.GetAll(ctx)
 	if err != nil {
 		return nil, err
 	}
@@ -66,7 +66,7 @@ func (r *queryResolver) StudentsByName(ctx context.Context, name string) ([]*mod
 
 // StudentByID is the resolver for the studentByID field.
 func (r *queryResolver) StudentByID(ctx context.Context, id string) (*model.Student, error) {
-	s, err := r.Store.Get(id)
+	s, err := r.Store.Get(ctx, id)
 	if err != nil {
 		return nil, err
 	}
@@ -102,6 +102,8 @@ func (r *Resolver) Query() graph.QueryResolver { return &queryResolver{r} }
 // Student returns graph.StudentResolver implementation.
 func (r *Resolver) Student() graph.StudentResolver { return &studentResolver{r} }
 
-type mutationResolver struct{ *Resolver }
-type queryResolver struct{ *Resolver }
-type studentResolver struct{ *Resolver }
+type (
+	mutationResolver struct{ *Resolver }
+	queryResolver    struct{ *Resolver }
+	studentResolver  struct{ *Resolver }
+)

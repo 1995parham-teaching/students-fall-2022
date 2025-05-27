@@ -1,10 +1,12 @@
 package course
 
 import (
+	"context"
 	"log"
 
-	"github.com/1995parham-teaching/students/internal/model"
 	"gorm.io/gorm"
+
+	"github.com/1995parham-teaching/students/internal/model"
 )
 
 type SQLItem struct {
@@ -17,7 +19,7 @@ func (SQLItem) TableName() string {
 }
 
 type SQL struct {
-	DB *gorm.DB
+	conn gorm.Interface[SQLItem]
 }
 
 func NewSQL(db *gorm.DB) Course {
@@ -26,14 +28,13 @@ func NewSQL(db *gorm.DB) Course {
 	}
 
 	return SQL{
-		DB: db,
+		conn: gorm.G[SQLItem](db),
 	}
 }
 
-func (sql SQL) GetAll() ([]model.Course, error) {
-	var items []SQLItem
-
-	if err := sql.DB.Model(new(SQLItem)).Find(&items).Error; err != nil {
+func (sql SQL) GetAll(ctx context.Context) ([]model.Course, error) {
+	items, err := sql.conn.Find(ctx)
+	if err != nil {
 		return nil, err
 	}
 
@@ -49,17 +50,16 @@ func (sql SQL) GetAll() ([]model.Course, error) {
 	return courses, nil
 }
 
-func (sql SQL) Create(s model.Course) error {
-	return sql.DB.Create(&SQLItem{
+func (sql SQL) Create(ctx context.Context, s model.Course) error {
+	return sql.conn.Create(ctx, &SQLItem{
 		ID:   s.ID,
 		Name: s.Name,
-	}).Error
+	})
 }
 
-func (sql SQL) Get(id string) (model.Course, error) {
-	var c SQLItem
-
-	if err := sql.DB.First(&c, id).Error; err != nil {
+func (sql SQL) Get(ctx context.Context, id string) (model.Course, error) {
+	c, err := sql.conn.Where("id = ?", id).First(ctx)
+	if err != nil {
 		return model.Course{}, err
 	}
 

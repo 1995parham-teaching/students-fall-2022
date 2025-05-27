@@ -1,12 +1,15 @@
 package student
 
 import (
+	"context"
 	"errors"
 	"log"
 
+	"gorm.io/gorm"
+	"gorm.io/gorm/clause"
+
 	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/store/course"
-	"gorm.io/gorm"
 )
 
 type SQLItem struct {
@@ -20,7 +23,8 @@ func (SQLItem) TableName() string {
 }
 
 type SQL struct {
-	DB *gorm.DB
+	conn gorm.Interface[SQLItem]
+	db   *gorm.DB
 }
 
 func NewSQL(db *gorm.DB) Student {
@@ -29,16 +33,14 @@ func NewSQL(db *gorm.DB) Student {
 	}
 
 	return SQL{
-		DB: db,
+		conn: gorm.G[SQLItem](db),
+		db:   db,
 	}
 }
 
-func (sql SQL) GetAll() ([]model.Student, error) {
-	var items []SQLItem
-
-	if err := sql.DB.Model(new(SQLItem)).
-		Preload("Courses").
-		Find(&items).Error; err != nil {
+func (sql SQL) GetAll(ctx context.Context) ([]model.Student, error) {
+	items, err := sql.conn.Preload("Courses", nil).Find(ctx)
+	if err != nil {
 		return nil, err
 	}
 
@@ -64,18 +66,17 @@ func (sql SQL) GetAll() ([]model.Student, error) {
 	return students, nil
 }
 
-func (sql SQL) Create(s model.Student) error {
-	return sql.DB.Create(&SQLItem{
+func (sql SQL) Create(ctx context.Context, s model.Student) error {
+	return sql.conn.Create(ctx, &SQLItem{
 		ID:      s.ID,
 		Name:    s.Name,
 		Courses: nil,
-	}).Error
+	})
 }
 
-func (sql SQL) Register(sid string, cid string) error {
-	var c course.SQLItem
-
-	if err := sql.DB.First(&c, cid).Error; err != nil {
+func (sql SQL) Register(ctx context.Context, sid string, cid string) error {
+	c, err := gorm.G[course.SQLItem](sql.db).Where("id = ?", cid).First(ctx)
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return course.ErrCourseNotFound
 		}
@@ -83,9 +84,8 @@ func (sql SQL) Register(sid string, cid string) error {
 		return err
 	}
 
-	var s SQLItem
-
-	if err := sql.DB.Model(new(SQLItem)).First(&s, sid).Error; err != nil {
+	s, err := sql.conn.Where("id = ?", sid).First(ctx)
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return ErrStudentNotFound
 		}
@@ -95,26 +95,34 @@ func (sql SQL) Register(sid string, cid string) error {
 
 	s.Courses = append(s.Courses, c)
 
-	return sql.DB.Save(&s).Error
+	if _, err := sql.conn.Updates(ctx, s); err != nil {
+		return err
+	}
+
+	return nil
 }
 
-func (sql SQL) Get(id string) (model.Student, error) {
+func (sql SQL) Get(ctx context.Context, id string) (model.Student, error) {
 	// st contains single students repeated multiple times
 	// to contains the course information using join.
 	// Here joining will remove the n+1 issue which happens
 	// with Preload().
-	var st []struct {
+	type joined struct {
 		ID          string
 		Name        string
 		CoursesID   *string
 		CoursesName *string
 	}
 
-	if err := sql.DB.Table("students").
-		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
-		Joins("LEFT JOIN (select id courses_id, name courses_name from `courses`) ON "+
-			"`courses_id` = `students_courses`.`course_id`").
-		Where("students.id = ?", id).Scan(&st).Error; err != nil {
+	st, err := gorm.G[joined](sql.db).Joins(clause.JoinTarget{
+		Type: clause.LeftJoin,
+		Association: "",
+		Subquery: clause.Expr{},
+		Table: "students_courses",
+	}, func(db gorm.JoinBuilder, joinTable clause.Table, curTable clause.Table) error {
+		return nil
+	}).Where("students.id = ?", id).Find(ctx)
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
 		}
