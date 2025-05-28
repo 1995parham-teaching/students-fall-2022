@@ -1,0 +1,36 @@
+### student_create
+
+POST http://127.0.0.1:1373/v1/students
+Content-Type: application/json
+
+{ "name": "Parham Alvani" }
+
+### course_create_c
+
+POST http://127.0.0.1:1373/v1/courses
+Content-Type: application/json
+
+{ "name": "C Programming" }
+
+### course_create_ie
+
+POST http://127.0.0.1:1373/v1/courses
+Content-Type: application/json
+
+{ "name": "Internet Engineering" }
+
+### register_c
+
+GET http://127.0.0.1:1373/v1/students/{{student_create.response.body.$.id}}/register/{{course_create_c.response.body.$.id}}
+
+### register_ie
+
+GET http://127.0.0.1:1373/v1/students/{{student_create.response.body.$.id}}/register/{{course_create_ie.response.body.$.id}}
+
+### student_get
+
+GET http://127.0.0.1:1373/v1/students/{{student_create.response.body.$.id}}
+
+### student_get_all
+
+GET http://127.0.0.1:1373/v1/students

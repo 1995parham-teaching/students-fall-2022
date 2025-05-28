@@ -7,6 +7,6 @@ type Student struct {
 }
 
 type Course struct {
-	Name string
-	ID   string
+	Name string `json:"name,omitempty"`
+	ID   string `json:"id,omitempty"`
 }
