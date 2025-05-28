@@ -5,11 +5,9 @@ import (
 	"errors"
 	"log"
 
-	"gorm.io/gorm"
-	"gorm.io/gorm/clause"
-
 	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/store/course"
+	"gorm.io/gorm"
 )
 
 type SQLItem struct {
@@ -105,24 +103,21 @@ func (sql SQL) Register(ctx context.Context, sid string, cid string) error {
 func (sql SQL) Get(ctx context.Context, id string) (model.Student, error) {
 	// st contains single students repeated multiple times
 	// to contains the course information using join.
+	//
 	// Here joining will remove the n+1 issue which happens
 	// with Preload().
-	type joined struct {
+	var st []struct {
 		ID          string
 		Name        string
 		CoursesID   *string
 		CoursesName *string
 	}
 
-	st, err := gorm.G[joined](sql.db).Joins(clause.JoinTarget{
-		Type: clause.LeftJoin,
-		Association: "",
-		Subquery: clause.Expr{},
-		Table: "students_courses",
-	}, func(db gorm.JoinBuilder, joinTable clause.Table, curTable clause.Table) error {
-		return nil
-	}).Where("students.id = ?", id).Find(ctx)
-	if err != nil {
+	if err := sql.db.Table("students").
+		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
+		Joins("LEFT JOIN (select id courses_id, name courses_name from `courses`) ON "+
+			"`courses_id` = `students_courses`.`course_id`").
+		Where("students.id = ?", id).Scan(&st).Error; err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
 		}
