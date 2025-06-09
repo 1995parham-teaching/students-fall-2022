@@ -3,7 +3,7 @@ module github.com/1995parham-teaching/students
 go 1.24
 
 require (
-	github.com/99designs/gqlgen v0.17.73
+	github.com/99designs/gqlgen v0.17.74
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/vektah/gqlparser/v2 v2.5.27
@@ -37,7 +37,7 @@ require (
 	golang.org/x/sync v0.14.0 // indirect
 	golang.org/x/sys v0.33.0 // indirect
 	golang.org/x/text v0.25.0 // indirect
-	golang.org/x/tools v0.32.0 // indirect
+	golang.org/x/tools v0.33.0 // indirect
 	gopkg.in/yaml.v3 v3.0.1 // indirect
 )
 
