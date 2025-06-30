@@ -31,13 +31,15 @@ func (s Student) Create(c echo.Context) error {
 
 	var req request.StudentCreate
 
-	if err := c.Bind(&req); err != nil {
+	err := c.Bind(&req)
+	if err != nil {
 		log.Println(err)
 
 		return echo.ErrBadRequest
 	}
 
-	if err := req.Validate(); err != nil {
+	err = req.Validate()
+	if err != nil {
 		log.Println(err)
 
 		return echo.ErrBadRequest
@@ -54,7 +56,8 @@ func (s Student) Create(c echo.Context) error {
 		Courses: nil,
 	}
 
-	if err := s.Store.Create(ctx, st); err != nil {
+	err = s.Store.Create(ctx, st)
+	if err != nil {
 		if errors.Is(err, student.ErrStudentAlreadyExists) {
 			return echo.ErrBadRequest
 		}
@@ -86,7 +89,8 @@ func (s Student) Get(c echo.Context) error {
 
 	id := c.Param("id")
 
-	if err := validation.Validate(id, validation.Length(StudentIDLen, StudentIDLen), is.Digit); err != nil {
+	err := validation.Validate(id, validation.Length(StudentIDLen, StudentIDLen), is.Digit)
+	if err != nil {
 		return echo.ErrBadRequest
 	}
 
@@ -108,15 +112,18 @@ func (s Student) Fill(c echo.Context) error {
 	sid := c.Param("sid")
 	cid := c.Param("cid")
 
-	if err := validation.Validate(sid, validation.Length(StudentIDLen, StudentIDLen), is.Digit); err != nil {
+	err := validation.Validate(sid, validation.Length(StudentIDLen, StudentIDLen), is.Digit)
+	if err != nil {
 		return echo.ErrBadRequest
 	}
 
-	if err := validation.Validate(cid, validation.Length(CourseIDLen, CourseIDLen), is.Digit); err != nil {
+	err = validation.Validate(cid, validation.Length(CourseIDLen, CourseIDLen), is.Digit)
+	if err != nil {
 		return echo.ErrBadRequest
 	}
 
-	if err := s.Store.Register(ctx, sid, cid); err != nil {
+	err = s.Store.Register(ctx, sid, cid)
+	if err != nil {
 		if errors.Is(err, student.ErrStudentNotFound) {
 			return echo.ErrNotFound
 		}

@@ -20,7 +20,8 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 		Name: name,
 	}
 
-	if err := req.Validate(); err != nil {
+	err := req.Validate()
+	if err != nil {
 		return nil, err
 	}
 
@@ -30,7 +31,8 @@ func (r *mutationResolver) CreateStudent(ctx context.Context, name string) (*mod
 		Courses: nil,
 	}
 
-	if err := r.Store.Create(ctx, st); err != nil {
+	err = r.Store.Create(ctx, st)
+	if err != nil {
 		return nil, err
 	}
 

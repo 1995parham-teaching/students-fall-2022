@@ -13,15 +13,17 @@ type StudentCreate struct {
 }
 
 func (r StudentCreate) Validate() error {
-	if err := validation.ValidateStruct(&r,
+	err := validation.ValidateStruct(&r,
 		validation.Field(&r.Name, validation.Length(1, 0), validation.Required),
-	); err != nil {
+	)
+	if err != nil {
 		return fmt.Errorf("student creation request validation failed %w", err)
 	}
 
-	if err := validation.Validate(strings.Fields(r.Name),
+	err = validation.Validate(strings.Fields(r.Name),
 		validation.Each(is.UTFLetter),
-	); err != nil {
+	)
+	if err != nil {
 		return fmt.Errorf("student creation request validation failed %w", err)
 	}
 

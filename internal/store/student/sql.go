@@ -26,7 +26,8 @@ type SQL struct {
 }
 
 func NewSQL(db *gorm.DB) Student {
-	if err := db.AutoMigrate(new(SQLItem)); err != nil {
+	err := db.AutoMigrate(new(SQLItem))
+	if err != nil {
 		log.Fatal(err)
 	}
 
@@ -93,7 +94,8 @@ func (sql SQL) Register(ctx context.Context, sid string, cid string) error {
 
 	s.Courses = append(s.Courses, c)
 
-	if _, err := sql.conn.Updates(ctx, s); err != nil {
+	_, err = sql.conn.Updates(ctx, s)
+	if err != nil {
 		return err
 	}
 
@@ -113,11 +115,12 @@ func (sql SQL) Get(ctx context.Context, id string) (model.Student, error) {
 		CoursesName *string
 	}
 
-	if err := sql.db.Table("students").
+	err := sql.db.Table("students").
 		Joins("LEFT JOIN `students_courses` ON `students`.`id` = `students_courses`.`sql_item_id`").
 		Joins("LEFT JOIN (select id courses_id, name courses_name from `courses`) ON "+
 			"`courses_id` = `students_courses`.`course_id`").
-		Where("students.id = ?", id).Scan(&st).Error; err != nil {
+		Where("students.id = ?", id).Scan(&st).Error
+	if err != nil {
 		if errors.Is(err, gorm.ErrRecordNotFound) {
 			return model.Student{}, ErrStudentNotFound
 		}

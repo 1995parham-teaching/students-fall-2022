@@ -30,13 +30,15 @@ func (s Course) Create(c echo.Context) error {
 
 	var req request.CourseCreate
 
-	if err := c.Bind(&req); err != nil {
+	err := c.Bind(&req)
+	if err != nil {
 		log.Println(err)
 
 		return echo.ErrBadRequest
 	}
 
-	if err := req.Validate(); err != nil {
+	err = req.Validate()
+	if err != nil {
 		log.Println(err)
 
 		return echo.ErrBadRequest
@@ -52,7 +54,8 @@ func (s Course) Create(c echo.Context) error {
 		ID:   fmt.Sprintf("%08d", idBig.Int64()),
 	}
 
-	if err := s.Store.Create(ctx, cr); err != nil {
+	err = s.Store.Create(ctx, cr)
+	if err != nil {
 		if errors.Is(err, course.ErrCourseAlreadyExists) {
 			return echo.ErrBadRequest
 		}
@@ -79,7 +82,8 @@ func (s Course) Get(c echo.Context) error {
 
 	id := c.Param("id")
 
-	if err := validation.Validate(id, validation.Length(CourseIDLen, CourseIDLen), is.Digit); err != nil {
+	err := validation.Validate(id, validation.Length(CourseIDLen, CourseIDLen), is.Digit)
+	if err != nil {
 		return echo.ErrBadRequest
 	}
 

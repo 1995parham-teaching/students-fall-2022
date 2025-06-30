@@ -23,7 +23,8 @@ type SQL struct {
 }
 
 func NewSQL(db *gorm.DB) Course {
-	if err := db.AutoMigrate(new(SQLItem)); err != nil {
+	err := db.AutoMigrate(new(SQLItem))
+	if err != nil {
 		log.Fatal(err)
 	}
 

@@ -73,7 +73,8 @@ func main() {
 		g.GET("/graphiql", echo.WrapHandler(playground.Handler("students-fall-2022", "/v2/query")))
 	}
 
-	if err := app.Start("127.0.0.1:1373"); err != nil {
+	err = app.Start("127.0.0.1:1373")
+	if err != nil {
 		log.Fatal(err)
 	}
 }
