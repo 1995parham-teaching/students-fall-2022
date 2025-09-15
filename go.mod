@@ -8,7 +8,7 @@ require (
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/vektah/gqlparser/v2 v2.5.30
 	gorm.io/driver/sqlite v1.6.0
-	gorm.io/gorm v1.30.3
+	gorm.io/gorm v1.31.0
 )
 
 require (
