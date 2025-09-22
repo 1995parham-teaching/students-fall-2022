@@ -3,7 +3,7 @@ module github.com/1995parham-teaching/students
 go 1.24.0
 
 require (
-	github.com/99designs/gqlgen v0.17.79
+	github.com/99designs/gqlgen v0.17.80
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/labstack/echo/v4 v4.13.4
 	github.com/vektah/gqlparser/v2 v2.5.30
