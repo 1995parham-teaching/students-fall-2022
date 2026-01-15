@@ -121,11 +121,11 @@ func (sql SQL) Get(ctx context.Context, id string) (model.Student, error) {
 			"`courses_id` = `students_courses`.`course_id`").
 		Where("students.id = ?", id).Scan(&st).Error
 	if err != nil {
-		if errors.Is(err, gorm.ErrRecordNotFound) {
-			return model.Student{}, ErrStudentNotFound
-		}
-
 		return model.Student{}, err
+	}
+
+	if len(st) == 0 {
+		return model.Student{}, ErrStudentNotFound
 	}
 
 	courses := make([]model.Course, 0, len(st))
