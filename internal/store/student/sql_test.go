@@ -115,8 +115,7 @@ func TestSQL_Get_StudentWithCourses(t *testing.T) {
 
 	// Register student for courses
 	for _, c := range courses {
-		err := studentStore.Register(ctx, st.ID, c.ID)
-		if err != nil {
+		if err := studentStore.Register(ctx, st.ID, c.ID); err != nil {
 			t.Fatalf("failed to register student for course %s: %v", c.Name, err)
 		}
 	}
@@ -247,8 +246,7 @@ func TestSQL_GetAll_MultipleStudents(t *testing.T) {
 	}
 
 	for _, st := range expected {
-		err := store.Create(ctx, st)
-		if err != nil {
+		if err := store.Create(ctx, st); err != nil {
 			t.Fatalf("failed to create student %s: %v", st.Name, err)
 		}
 	}
@@ -310,8 +308,7 @@ func TestSQL_GetAll_WithCourses(t *testing.T) {
 	}
 
 	for _, st := range students {
-		err := studentStore.Create(ctx, st)
-		if err != nil {
+		if err := studentStore.Create(ctx, st); err != nil {
 			t.Fatalf("failed to create student %s: %v", st.Name, err)
 		}
 	}
@@ -460,8 +457,7 @@ func TestSQL_Register_MultipleCourses(t *testing.T) {
 	}
 
 	for _, c := range courses {
-		err := courseStore.Create(ctx, c)
-		if err != nil {
+		if err := courseStore.Create(ctx, c); err != nil {
 			t.Fatalf("failed to create course %s: %v", c.Name, err)
 		}
 	}
@@ -469,15 +465,13 @@ func TestSQL_Register_MultipleCourses(t *testing.T) {
 	// Create student
 	st := model.Student{ID: "12345678", Name: "Parham Alvani", Courses: nil}
 
-	err := studentStore.Create(ctx, st)
-	if err != nil {
+	if err := studentStore.Create(ctx, st); err != nil {
 		t.Fatalf("failed to create student: %v", err)
 	}
 
 	// Register for all courses
 	for _, c := range courses {
-		err := studentStore.Register(ctx, st.ID, c.ID)
-		if err != nil {
+		if err := studentStore.Register(ctx, st.ID, c.ID); err != nil {
 			t.Fatalf("failed to register for course %s: %v", c.Name, err)
 		}
 	}

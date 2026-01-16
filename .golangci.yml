@@ -12,6 +12,8 @@ linters:
     - ireturn
     - revive
     - wrapcheck
+    # we prefer inline error handling
+    - noinlineerr
 
   settings:
     wrapcheck:
