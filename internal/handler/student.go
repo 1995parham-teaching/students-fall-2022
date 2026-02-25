@@ -7,6 +7,7 @@ import (
 	"log"
 	"math/big"
 	"net/http"
+	"strings"
 
 	"github.com/1995parham-teaching/students/internal/model"
 	"github.com/1995parham-teaching/students/internal/request"
@@ -77,7 +78,8 @@ func (s Student) GetAll(c echo.Context) error {
 	}
 
 	h := c.Request().Header.Get("Students-Fall-2022")
-	log.Printf("Students-Fall-2022: %s\n", h)
+	sanitized := strings.NewReplacer("\n", "", "\r", "").Replace(h)
+	log.Printf("Students-Fall-2022: %s\n", sanitized)
 
 	c.Response().Header().Add("Students-Fall-2022", "123")
 
