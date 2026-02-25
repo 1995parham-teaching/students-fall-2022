@@ -12,6 +12,7 @@ linters:
     - ireturn
     - revive
     - wrapcheck
+    - gosec
     # we prefer inline error handling
     - noinlineerr
 
