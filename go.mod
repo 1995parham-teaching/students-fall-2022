@@ -1,9 +1,9 @@
 module github.com/1995parham-teaching/students
 
-go 1.25
+go 1.25.0
 
 require (
-	github.com/99designs/gqlgen v0.17.87
+	github.com/99designs/gqlgen v0.17.88
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/labstack/echo/v4 v4.15.1
 	github.com/vektah/gqlparser/v2 v2.5.32
@@ -26,14 +26,14 @@ require (
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/mattn/go-sqlite3 v1.14.34 // indirect
 	github.com/sosodev/duration v1.4.0 // indirect
-	github.com/urfave/cli/v3 v3.6.2 // indirect
+	github.com/urfave/cli/v3 v3.7.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.48.0 // indirect
 	golang.org/x/mod v0.33.0 // indirect
-	golang.org/x/net v0.50.0 // indirect
-	golang.org/x/sync v0.19.0 // indirect
-	golang.org/x/sys v0.41.0 // indirect
+	golang.org/x/net v0.51.0 // indirect
+	golang.org/x/sync v0.20.0 // indirect
+	golang.org/x/sys v0.42.0 // indirect
 	golang.org/x/text v0.34.0 // indirect
 	golang.org/x/tools v0.42.0 // indirect
 )
