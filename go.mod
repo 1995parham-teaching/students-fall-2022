@@ -5,7 +5,7 @@ go 1.25.0
 require (
 	github.com/99designs/gqlgen v0.17.90
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
-	github.com/labstack/echo/v4 v4.15.1
+	github.com/labstack/echo/v4 v4.15.2
 	github.com/vektah/gqlparser/v2 v2.5.33
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.1
