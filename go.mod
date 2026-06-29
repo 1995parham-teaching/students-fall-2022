@@ -5,7 +5,7 @@ go 1.26.0
 toolchain go1.26.4
 
 require (
-	github.com/99designs/gqlgen v0.17.92
+	github.com/99designs/gqlgen v0.17.93
 	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
 	github.com/labstack/echo/v4 v4.15.4
 	github.com/vektah/gqlparser/v2 v2.5.35
@@ -28,7 +28,7 @@ require (
 	github.com/mattn/go-isatty v0.0.22 // indirect
 	github.com/mattn/go-sqlite3 v1.14.47 // indirect
 	github.com/sosodev/duration v1.4.0 // indirect
-	github.com/urfave/cli/v3 v3.9.0 // indirect
+	github.com/urfave/cli/v3 v3.10.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.53.0 // indirect
