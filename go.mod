@@ -6,7 +6,7 @@ toolchain go1.26.4
 
 require (
 	github.com/99designs/gqlgen v0.17.94
-	github.com/go-ozzo/ozzo-validation/v4 v4.3.0
+	github.com/go-ozzo/ozzo-validation/v4 v4.4.1
 	github.com/labstack/echo/v4 v4.15.4
 	github.com/vektah/gqlparser/v2 v2.5.36
 	gorm.io/driver/sqlite v1.6.0
