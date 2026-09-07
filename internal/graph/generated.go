@@ -2712,10 +2712,6 @@ func (ec *executionContext) marshalNString2string(ctx context.Context, sel ast.S
 	return res
 }
 
-func (ec *executionContext) marshalNStudent2githubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋmodelᚐStudent(ctx context.Context, sel ast.SelectionSet, v model.Student) graphql.Marshaler {
-	return ec._Student(ctx, sel, &v)
-}
-
 func (ec *executionContext) marshalNStudent2ᚕᚖgithubᚗcomᚋ1995parhamᚑteachingᚋstudentsᚋinternalᚋmodelᚐStudentᚄ(ctx context.Context, sel ast.SelectionSet, v []*model.Student) graphql.Marshaler {
 	ret := graphql.MarshalSliceConcurrently(ctx, len(v), 0, false, func(ctx context.Context, i int) graphql.Marshaler {
 		fc := graphql.GetFieldContext(ctx)
@@ -2779,8 +2775,7 @@ func (ec *executionContext) marshalN__DirectiveLocation2string(ctx context.Conte
 }
 
 func (ec *executionContext) unmarshalN__DirectiveLocation2ᚕstringᚄ(ctx context.Context, v any) ([]string, error) {
-	var vSlice []any
-	vSlice = graphql.CoerceList(v)
+	vSlice := graphql.CoerceList(v)
 	var err error
 	res := make([]string, len(vSlice))
 	for i := range vSlice {
