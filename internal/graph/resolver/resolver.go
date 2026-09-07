@@ -20,7 +20,7 @@ func NewResolver(store student.Student) *Resolver {
 }
 
 func New(store student.Student) graph.Config {
-	// nolint: exhaustruct
+	//nolint:exhaustruct_v5
 	c := graph.Config{
 		Schema:     nil,
 		Resolvers:  NewResolver(store),

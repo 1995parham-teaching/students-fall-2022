@@ -16,7 +16,7 @@ import (
 func setupTestDB(t *testing.T) *gorm.DB {
 	t.Helper()
 
-	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{ //nolint:exhaustruct
+	db, err := gorm.Open(sqlite.Open(":memory:"), &gorm.Config{ //nolint:exhaustruct_v5
 		Logger: logger.Default.LogMode(logger.Silent),
 	})
 	if err != nil {
