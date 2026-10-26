@@ -5,7 +5,7 @@ go 1.26.0
 toolchain go1.26.4
 
 require (
-	github.com/99designs/gqlgen v0.17.95
+	github.com/99designs/gqlgen v0.17.98
 	github.com/go-ozzo/ozzo-validation/v4 v4.4.1
 	github.com/labstack/echo/v4 v4.16.2
 	github.com/vektah/gqlparser/v2 v2.5.64
@@ -28,16 +28,16 @@ require (
 	github.com/mattn/go-isatty v0.0.24 // indirect
 	github.com/mattn/go-sqlite3 v1.14.52 // indirect
 	github.com/sosodev/duration v1.4.0 // indirect
-	github.com/urfave/cli/v3 v3.11.0 // indirect
+	github.com/urfave/cli/v3 v3.14.0 // indirect
 	github.com/valyala/bytebufferpool v1.0.0 // indirect
 	github.com/valyala/fasttemplate v1.2.2 // indirect
 	golang.org/x/crypto v0.58.0 // indirect
-	golang.org/x/mod v0.41.0 // indirect
+	golang.org/x/mod v0.42.0 // indirect
 	golang.org/x/net v0.61.0 // indirect
 	golang.org/x/sync v0.24.0 // indirect
 	golang.org/x/sys v0.49.0 // indirect
 	golang.org/x/text v0.43.0 // indirect
-	golang.org/x/tools v0.51.0 // indirect
+	golang.org/x/tools v0.52.0 // indirect
 )
 
 tool (
