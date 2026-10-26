@@ -8,13 +8,13 @@ require (
 	github.com/99designs/gqlgen v0.17.95
 	github.com/go-ozzo/ozzo-validation/v4 v4.4.1
 	github.com/labstack/echo/v4 v4.16.0
-	github.com/vektah/gqlparser/v2 v2.5.63
+	github.com/vektah/gqlparser/v2 v2.5.64
 	gorm.io/driver/sqlite v1.6.0
 	gorm.io/gorm v1.31.2
 )
 
 require (
-	github.com/agnivade/levenshtein v1.2.1 // indirect
+	github.com/agnivade/levenshtein v1.2.2 // indirect
 	github.com/asaskevich/govalidator v0.0.0-20230301143203-a9d515a09cc2 // indirect
 	github.com/coder/websocket v1.8.15 // indirect
 	github.com/go-viper/mapstructure/v2 v2.5.0 // indirect
